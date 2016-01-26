@@ -1,1 +1,1 @@
-Site to sell video content.
+Site to sell video content with django and django rest framework.
