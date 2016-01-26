@@ -1,0 +1,58 @@
+<style>
+{% block style %}
+.badge {
+  background: #444;
+  position: relative;
+  top: -6px;
+  left: -8px;
+  padding-bottom: 5px;
+  padding-top: 4px;
+}
+.navbar {
+  background-color: #000673; 
+  border-color: #000673;
+}
+.navbar-default .navbar-nav>li>a, .navbar-default .navbar-brand {
+  color: #FFFFFF; 
+}
+{% endblock style %}
+</style>
+<!-- Static navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container col-sm-8 col-sm-offset-2">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><b>srvup</b></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'categories:list' %}">Categories</a></li>
+        <li><a href="{% url 'billing:upgrade' %}">Enroll</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+
+      {% if user.is_authenticated %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle notifications-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-badge" aria-hidden="true">0</span>
+          </a>
+          <ul class="dropdown-menu notifications" id="dropdown-notifications">
+
+          </ul>
+        </li>
+        <li><a href="{% url 'account_profile' %}">Account</a></li>
+        <li><a href="{% url 'account_logout' %}">Logout</a></li>
+      {% else %}
+        <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
+        <li><a href="{% url 'account_login' %}">Login</a></li>
+      {% endif %}
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-sm-8">
+			<h2 class="text-center">Transactions History</h2>
+		</div>
+		{% if not request.user.is_member %}
+		<br/>
+		<div class="col-sm-4 text-right">
+			<a href="{% url 'billing:upgrade' %}" class="btn btn-warning">Upgrade Account</a>
+		</div>
+		{% endif %}
+	</div>
+	<hr/>
+	{% if object_list.count > 0 %}
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Order #</th>
+					<th>Amount</th>
+					<th>Payment Method</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			{% for transaction in object_list %}
+			<tbody>
+				<tr>
+					<td>{{ transaction.order_id }}</td>
+					<td>{{ transaction.amount }}</td>
+					<td>{{ transaction.card_type }}</td>
+					<td>{{ transaction.timestamp }}</td>
+				</tr>
+			</tbody>
+			{% endfor %}
+		</table>
+	{% else %}
+		<p class="lead">You have no transactions yet.</p>
+	{% endif %}
+{% endblock content %}

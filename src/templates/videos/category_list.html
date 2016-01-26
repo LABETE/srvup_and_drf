@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+{% block head_title %}Categories{% endblock head_title %}
+
+{% block content %}
+<h2 class="text-center">Categories</h2>
+<hr/>
+<div class="row">
+	<div class="col-sm-8 col-sm-offset-2">
+	{% for category in object_list %}
+	
+		<div class="col-sm-6">
+			<a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
+			<a href="{{ category.get_absolute_url }}"><img src="{{ category.get_image_url }}" width="200" height="150" alt="" class="img-responsive"></a>
+		</div>
+		{% if forloop.counter|divisibleby:2 %}
+			<div class="row">
+				<div class="col-sm-12">
+					<hr/>
+				</div>
+			</div>
+		{% endif %}
+		
+	{% endfor %}
+	</div>
+</div>
+{% endblock content %}
+

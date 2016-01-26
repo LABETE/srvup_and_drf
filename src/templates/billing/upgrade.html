@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+<script>
+	{% block jquery %}
+
+	braintree.setup("{{ client_token }}", "dropin", {
+	  container: "checkout",
+	  form: "checkoutForm"
+	});
+	{% endblock jquery %}
+</script>
+
+
+
+{% block content %}
+	<h1 class="text-center">Enroll</h1>
+	<p class="lead text-center">Enroll just for $25</p>
+<hr/>
+<div class="col-sm-6 col-sm-offset-3">
+	<form id="checkoutForm" method="POST" action=".">
+		{% csrf_token %}
+		<div id="checkout"></div>
+		<input type="submit" class="btn btn-default" value="Enroll">
+	</form>
+</div>
+
+{% endblock content %}

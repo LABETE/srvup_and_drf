@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+			<h2>Account</h2>
+			<hr/>
+			<a href="{% url 'notifications:list' %}">
+				<h4>View Notifications</h4>
+			</a>
+			<h4>Account Options</h4>
+			<p>Account active until: {{ request.user.membership.end_date }}</p>
+			{% if request.user.usermerchantid.subscription_id %}
+				<a href="{% url 'billing:cancel' %}" class="btn btn-warning">Cancel Account</a>
+			{% else %}
+				<a href="{% url 'billing:upgrade' %}" class="btn btn-success">Upgrade Account</a>
+			{% endif %}
+			<a href="{% url 'billing:list' %}">
+				<h4>Billing History</h4>
+			</a>
+		</div>
+	</div>
+{% endblock content %}

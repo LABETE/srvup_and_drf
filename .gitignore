@@ -1,0 +1,14 @@
+bin/
+include/
+lib/
+.DS_STORE
+.python
+*.py[cod]
+pip-selfcheck.json
+*.plist
+users.json
+src/srvup/settings/local.py
+src/srvup/settings/production.py
+src/srvup/old_settings.py
+drf.sublime-project
+drf.sublime-workspace

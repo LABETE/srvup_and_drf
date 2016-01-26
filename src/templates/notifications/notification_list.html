@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center">Notifications</h2>
+<hr/>
+{% if object_list %}
+<table class="table">
+{% for noti in object_list %}
+	<tr>
+		<td>
+			{{ noti|safe }}
+		</td>
+		<td>
+			{% if noti.read %} Read {% else %} Unread {% endif %}
+		</td>
+	</tr>
+{% endfor %}
+</table>
+{% else %}
+	<p>You have no notifications yet.</p>
+{% endif %}
+
+
+{% endblock content %}

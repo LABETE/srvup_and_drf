@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<a href="{{ object.get_path }}">Go Back</a>
+<br/>
+<table class="table">
+	{{ object.get_comment }}
+	{% for comment in comments %}
+	<tr>
+		<td>
+			{{ comment.text }}
+			<br/>
+			<small> via {{ comment.user }} | {{ comment.timestamp|timesince }} ago</small>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+<div>
+	<form method="POST" action="">
+		{% csrf_token %}
+		<input type="hidden" value="{{ object.id }}">
+		{% crispy form %}
+		<!--<input class="btn primary-btn" type="submit" value="Reply">-->
+	</form>
+</div>
+
+{% endblock content %}

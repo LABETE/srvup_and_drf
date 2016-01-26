@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>srvup Project | {% block head_title %}{% endblock head_title %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    {% include "extra_head_info.html" %}
+    <style>
+      {% block style %}
+      {% endblock style %}
+      html {
+        position: relative;
+        min-height: 100%;
+      }
+      body {
+        /* Margin bottom by footer height */
+        margin-bottom: 60px;
+      }
+      .container-fluid {
+        margin-top: 50px;
+      }
+      .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        /* Set the fixed height of the footer here */
+        height: 60px;
+        background-color: #f5f5f5;
+      }
+    </style>
+    
+  </head>
+
+  <body>
+
+    
+    {% include "navbar.html" %}
+   
+    <div class="container-fluid">
+      {% block jumbotron %}
+      {% endblock jumbotron %}
+      {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-success{% endif %} col-sm-8 col-sm-offset-2">
+          {{ message }}
+        </div>
+      {% endfor %}
+      <div class="col-sm-8 col-sm-offset-2">
+      {% block content %}
+      
+      {% endblock content %}
+      </div>
+
+    </div> <!-- /container -->
+    <footer class="footer footer-fixed-bottom">
+      <div class="container">
+        <p class="text-muted">&copy; 2016 Srvup Project</p>
+      </div>
+    </footer>
+
+  {% include "javascript.html" %}
+  <script>
+    {% block jquery %}
+      $(document).ready(function() {
+      });
+    {% endblock jquery %}
+  </script>
+  <script>
+    $(document).ready(function() {
+      $(".notifications-toggle").click(function () {
+        var request = $.ajax({
+          method: "GET",
+          url: "{% url 'notifications:ajax_notifications' %}",
+          data: {
+            notifications: "{{ notifications }}",
+            count: "{{ count }}"
+          },
+        });
+
+        request.done(function(data) {
+          console.log(data)
+          $("#dropdown-notifications").html("");
+          var count = data.count
+          var url = '{% url "notifications:list" %}'
+          $(data.notifications).each(function() {
+            var link = this;
+            $("#dropdown-notifications").append("<li>" + link + "</li>");
+          });
+          $("#dropdown-notifications").append("<li><a href='" + url + "'>View All</a></li>");
+        });
+
+        request.fail(function(jqXHR, textStatus) {
+          console.log(textStatus)
+          console.log(jqXHR)
+          if (jqXHR.status == 404) {
+              alert("Page not found.")
+            } else if (jqXHR.status == 404) {
+              alert("You must be logged in to do this.")
+            } else {
+              alert("There was an error with your request. Please try again.")
+            }
+        });
+      });
+    });
+  </script>
+  </body>
+</html>

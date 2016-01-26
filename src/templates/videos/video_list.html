@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+
+{% block head_title %}videos{% endblock head_title %}
+
+{% block jumbotron %}
+<div class="jumbotron col-sm-8 col-sm-offset-2">
+	<div class="row">
+		<div class="col-sm-6">
+			<h2>Welcome to {{ object_list.first.category.title }}</h2>
+		</div>
+		<div class="col-sm-6">
+			<a href="{% url 'categories:list' %}">
+				<img src="{{ object_list.first.category.get_image_url }}" width="200" class="img-responsive" alt="">	
+			</a>
+		</div>
+	</div>
+</div>
+{% endblock jumbotron %}
+	
+{% block content %}
+
+<div class="col-sm-8 col-sm-offset-2">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Lecture</th>
+			</tr>
+		</thead>
+		{% for video in object_list %}
+		<tbody>
+			<tr>
+				<td>
+					{{ video.order }}
+				</td>
+				<td>
+					<a href="{{ video.get_absolute_url }}">{{ video.title }}</a>		
+				</td>
+			</tr>
+		</tbody>
+		{% endfor %}
+	</table>
+</div>
+
+
+
+{% endblock content %}

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+<style>
+	{% block style %}
+		.reply_comment {
+			display: none;
+		}
+	{% endblock style %}
+</style>
+
+<script>
+	{% block jquery %}
+  		function update_iframe_size () {
+  			var parent_id = $("iframe").parent().attr("id");
+  			if (parent_id == "main_video") {
+  				var parent_class = $("iframe").parent().attr("class");
+  				var parent_width = $("iframe").parent().width();
+	  			var width = $("iframe").width();
+	  			var height = $("iframe").height();
+	  			var ratio = parseInt(height) / parseInt(width)
+	  			var new_height = parseInt(parent_width) * ratio
+	  			$("iframe").css("width", parent_width);
+	  			$("iframe").css("height", new_height);
+  			}
+  		}
+  		update_iframe_size();
+  		$(window).bind("resize", function () {
+  			update_iframe_size();
+  		});
+
+  		$(".reply_btn").click(function(event) {
+  			event.preventDefault();
+  			$(this).next().next().fadeToggle();
+  		});
+
+	{% endblock jquery %}
+</script>
+
+{% block content %}
+{% if object.has_preview or request.user.is_member %}
+	<div class="col-sm-8 col-sm-offset-2">
+		<h2>{{ object.title }}</h2>
+		<hr/>
+		<div class="col-sm-6">
+			{% if object.get_previous_url %}
+			<a href="{{ object.get_previous_url }}"><i class="fa fa-arrow-circle-o-left fa-3x"></i></a>
+			{% endif %}
+		</div>
+		<div class="col-sm-6 text-right">
+		{% if object.get_next_url %}
+			<a href="{{ object.get_next_url }}"><i class="fa fa-arrow-circle-o-right fa-3x"></i></a>
+		{% endif %}
+		</div>
+	</div>
+	
+	<div class="col-sm-8 col-sm-offset-2" id="main_video">
+		{{ object.embed_code|safe }}	
+	</div>
+	<p class="col-sm-offset-12">
+		<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ object.get_share_link|safe }}">
+			<i class="fa fa-facebook-square fa-3x" style="color:#3b5998;"></i>
+		</a>
+		<a target="_blank" href="https://twitter.com/home?status={{ object.get_share_link|safe }}">
+			<i class="fa fa-twitter-square fa-3x" style="color:#4099FF;"></i>
+		</a>
+		<a target="_blank" href="https://plus.google.com/share?url={{ object.get_share_link|safe }}">
+			<i class="fa fa-google-plus-square fa-3x" style="color:#D34836;"></i>
+		</a>
+	</p>
+	{% if object.tags.all %}
+	<div class="col-sm-8 col-sm-offset-2" >
+		<ul>
+			{% for tag in object.tags.all %}
+			<li>
+				{{ tag }}
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+	<div class="col-sm-8 col-sm-offset-2">
+		<h2>Comments/Questions</h2>
+		<hr/>
+		<form method="POST" action="">
+			{% csrf_token %}
+			{% crispy form %}
+			<!--<input class="btn primary-btn" type="submit" value="Comment">-->
+		</form>
+		<br/>
+		{% for comment in comments %}
+		<table class="table">
+			<tr>
+				<td>
+					{{ comment.get_comment }} 
+					<br/>
+					<small>
+						via {{ comment.user }} | {{ comment.timestamp|timesince }} ago
+					</small>
+					{% if not comment.is_child %}
+						<ul>
+							{% for child in comment.get_children %}
+								<li>
+									{{ child.text }}
+									<br/>
+									<small> via {{ child.user }} | {{ child.timestamp|timesince }} ago</small>
+								</li>
+							{% endfor %}
+						</ul>
+						<a href="#" class="reply_btn">Reply</a> | <a href="{{ comment.get_absolute_url }}">View Thread</a>
+						<div class="reply_comment">
+							<form method="POST" action="">
+								{% csrf_token %}
+								<input type="hidden" name="parent_id" value="{{ comment.id }}">
+								{% crispy form %}
+								<!--<input class="btn primary-btn" type="submit" value="Reply">-->
+							</form>
+							<br/>
+						</div>
+					{% endif %}
+				</td>
+			</tr>
+		</table>
+		{% endfor %}
+	</div>
+{% endif %}
+{% endblock content %}
